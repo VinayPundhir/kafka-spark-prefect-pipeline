@@ -1,3 +1,10 @@
+# Data Flow
+![Screenshot from 2023-07-23 20-36-15](https://github.com/VinayPundhir/kafka-spark-prefect-pipeline/assets/51248042/d0c5a77e-dca4-4a94-9e2c-94f2beda8315)
+
+
+
+
+
 # Project Structure
 
  ```
