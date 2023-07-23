@@ -38,31 +38,25 @@
         └── aggregate_and_index.py
  ```
 
-# Project Setup Guide
-This guide will help you set up the project and run the processes using Docker Compose. The project contains various modules and components that interact with APIs, databases, and messaging systems to handle clickstream data.
-
-### Usage
+## Usage
 Before you begin, ensure you have the following installed on your system:
 Docker (Docker Engine and Docker Compose)
 
-### Step 1: Clone the Repository
+### Create virtual env and activate
 
 ```
-    git clone https://github.com/your-username/your-project.git
-    cd your-project
+    python3.11 -m venv venv
+    source venv/bin/activate
 ```
 
-### Step 2: Install Dependencies
+### Install Dependencies
 
 ```
     pip install -r requirements.txt
 ```
 
-### Step 3: Setup Configuration
-Open the **config.py** file in the root directory of the project.
-Update the configuration settings according to your environment and requirements. This may include API endpoints, database connection settings, and any other necessary configurations.
-
-### Step 4: Running the Processes with Docker Compose ( Optional )
+for elastic search connection set ELASTIC_USERNAME, ELASTIC_PASSWORD in env.
+### Running kafka and elastic search instances with Docker Compose ( Optional )
 - Start the Kafka service:
 ```
     docker-compose -f processes/kafka.yml up -d
@@ -75,19 +69,17 @@ This will start the Kafka service in detached mode.
 ```
 This will start the Elasticsearch service in detached mode.
 
+### Setup Configuration
+Open the ```config.py``` file in the root directory of the project.
+Update the configuration settings according to your environment and requirements. This may include API endpoints, database connection settings, and any other necessary configurations.
 
-### step 5: Run the producer that creates clickstream data:
+### Deploy the pipeline using prefect:
 ```
-    python broker/producers/click_data.py
+    python pipeline/main.py
 ```
+This will create two flows for producer and consumer respectively and one flow for transformation.
 
-### step 6: Run the consumer that consumes data from Kafka and saves it into the SQLite database:
-
-```
-    python broker/consumers/save_click_data_into_db.py
-```
-
-### step 7: Run the script for transformations that will aggregate the clickstream data and index the results in Elasticsearch:
-```
-    python transformations/aggregate_and_index.py
-```
+- use ``` prefect server start``` command to run prefect ui. 
+- use ```prefect agent start -q 'default'``` to start a prefect agent.
+- control the number of producers and consumers using UI.
+- Transfomation ( aggergate_and_index ) will be scheduled for periodic runs

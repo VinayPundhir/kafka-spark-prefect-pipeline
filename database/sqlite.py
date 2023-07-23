@@ -1,8 +1,10 @@
 import sqlite3
+
 from config import DB_NAME
 
 
-def create_table(query):
+def create_table(query: str):
+    """sqlite implementation to create new table id does not exists"""
     try:
         conn = sqlite3.connect(DB_NAME)
         cursor = conn.cursor()
@@ -12,7 +14,8 @@ def create_table(query):
         conn.close()
 
 
-def insert_data(data,query):
+def insert_data(data: list, query: str):
+    """sqlite implementation to insert data into db"""
     try:
         conn = sqlite3.connect(DB_NAME)
         cursor = conn.cursor()
@@ -20,4 +23,3 @@ def insert_data(data,query):
         conn.commit()
     finally:
         conn.close()
-
