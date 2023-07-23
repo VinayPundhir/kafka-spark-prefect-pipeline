@@ -1,27 +1,35 @@
-from elasticsearch import Elasticsearch
-import ssl
-from config import USR_LOGIN,USR_PASS,ELASTIC_HOST_AND_PORT,CERT_PATH
 import logging
+import os
+
+from elasticsearch import Elasticsearch
+
+from config import CERT_PATH, ELASTIC_HOST, ELASTIC_PORT, ELASTIC_SCHEME
 
 logging.basicConfig(level=logging.INFO)
 
-ssl_context = ssl.create_default_context()
-ssl_context.check_hostname = False
-ssl_context.verify_mode = ssl.CERT_NONE
+
+def get_elastic_connection():
+    """function returns new  Elasticsearch instance if established a connection"""
+    elastic_username = os.environ.get("ELASTIC_USERNAME")
+    elastic_password = os.environ.get("ELASTIC_PASSWORD")
+
+    if not elastic_password:
+        raise ValueError("ELASTIC_PASSWORD not found in env")
+    if not elastic_username:
+        raise ValueError("ELASTIC_USERNAME not found in env")
+
+    return Elasticsearch(
+        hosts=[f"{ELASTIC_SCHEME}://{ELASTIC_HOST}:{ELASTIC_PORT}"],
+        http_auth=(elastic_username, elastic_password),
+        verify_certs=True,
+        ca_certs=CERT_PATH,
+    )
 
 
-es = Elasticsearch(
-    hosts=[
-            ELASTIC_HOST_AND_PORT
-    ],
-    http_auth=(USR_LOGIN, USR_PASS),
-    verify_certs=True,
-    ca_certs=CERT_PATH,
-)
-
-
-def push_data_to_elastic(data:list, index_name:str, mapping:dict):
+def push_data_to_elastic(data: list, index_name: str, mapping: dict):
+    """function pushes data to elastic index"""
+    es = get_elastic_connection()
     es.indices.create(index=index_name, body={"mappings": mapping}, ignore=400)
     for doc in data:
-        logging.info(f'push index : {index_name} : {doc}')
+        logging.info(f"push index : {index_name} : {doc}")
         es.index(index=index_name, body=doc)

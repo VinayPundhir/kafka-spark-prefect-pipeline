@@ -2,11 +2,8 @@
 TOPIC = "clickstream"
 KAFKA_SERVER = ["127.0.0.1"]
 
-# elastic
-USR_LOGIN = "elastic"
-USR_PASS = "a2t4cUIe*styKso7Cp1T"
-
-ELASTIC_HOST_AND_PORT = "https://localhost:9200"
+# elasticsearch
+ELASTIC_SCHEME = "https"
 ELASTIC_HOST = "localhost"
 CERT_PATH = "certs/http_ca.crt"
 ELASTIC_PORT = "9200"
