@@ -2,8 +2,15 @@ import logging
 
 import pyspark
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import (col, count, countDistinct, expr,
-                                   from_unixtime, unix_timestamp, when)
+from pyspark.sql.functions import (
+    col,
+    count,
+    countDistinct,
+    expr,
+    from_unixtime,
+    unix_timestamp,
+    when,
+)
 
 import config
 from apis.elastic import push_data_to_elastic
