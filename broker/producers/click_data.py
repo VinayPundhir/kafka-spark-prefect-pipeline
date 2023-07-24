@@ -46,7 +46,7 @@ def send_data(data: dict, producer: KafkaProducer):
     producer.flush()
 
 
-def produce_fake_data(producer: KafkaProducer, delay: int = 1):
+def produce_fake_data(producer: KafkaProducer, delay: int = 0.1):
     """function continuously creates fake click stream"""
     while True:
         data = generate_fake_data()

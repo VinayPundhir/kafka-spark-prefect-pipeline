@@ -3,8 +3,9 @@ mapping = {
         "properties": {
             "url": {"type": "keyword"},
             "country": {"type": "keyword"},
-            "all_clicks": {"type": "long"},
+            "clicks": {"type": "long"},
             "unique_users": {"type": "long"},
+            "average_time": {"type": "keyword"},
         }
     }
 }
