@@ -104,3 +104,6 @@ This will create two flows for producer and consumer respectively and one flow f
 - Project uses destructing from spark df to pandas df to push data row by row. As the data size increase we can use```elastic-hadoop``` connector to write in distributed fashion.
 - For creating the index ```apis/elastic.py``` uses ```mapping/elastic/click_events.py``` to create new index in elastic.
 - Transformation are scheduled by default when deploy the pipeline using ```pipeline/main.py```. Schedules can also be changed using prefect UI.
+
+#### Note : 
+- Replace the file ```certs/http_ca.crt``` for elastic accordingly.
