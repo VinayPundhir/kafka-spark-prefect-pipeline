@@ -90,3 +90,17 @@ This will create two flows for producer and consumer respectively and one flow f
 - use ```prefect agent start -q 'default'``` to start a prefect agent.
 - control the number of producers and consumers using UI.
 - Transfomation ( aggergate_and_index ) will be scheduled for periodic runs
+
+
+## Approach
+
+- Lets say there is one producer writing data to kafka topic ```clickstream```
+- Here in ```broker/producer/click_data.py``` is a producer that will generate fake click stream data and write in ```clickstream topic```.
+- Corresponding ```broker/consumers/save_click_data_into_db.py``` is a consumer that will write data into db by continuesly reading the stream from ```clickstream topic```.
+- Prefect Flow will help controlling the number of consumers independently depending upon the size of partition.
+- Consumer uses ```database``` to write data back in db. ```database``` implements different db connection and operations logic. Here we have used ```sqlite```. In production it can be replaced with any concurrent db like Mysql.
+- Every db implementation uses corresponding sql given in ```sql/query_name.sql``` so that same sql can be used with different databases.
+- Transformation ```transformation/aggreagate_and_index.py``` contains business logic to transform that data and push the result back to elastic index. It uses ```apis/elastic.py``` to create connection with elastic server and also implements the logic to create index and push data into the index.
+- Project uses destructing from spark df to pandas df to push data row by row. As the data size increase we can use```elastic-hadoop``` connector to write in distributed fashion.
+- For creating the index ```apis/elastic.py``` uses ```mapping/elastic/click_events.py``` to create new index in elastic.
+- Transformation are scheduled by default when deploy the pipeline using ```pipeline/main.py```. Schedules can also be changed using prefect UI.
