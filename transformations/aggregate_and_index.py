@@ -78,7 +78,11 @@ def transform(df: pyspark.sql.DataFrame) -> pyspark.sql.DataFrame:
 
 
 def push_to_elastic(df: pyspark.sql.DataFrame):
-    """function to push spark df to elastic"""
+    """
+    function to push spark df to elastic
+    """
+    # if size of data increases , function can be changed to push data directly using elastic-hadoop connector
+
     logging.info("Pushing data :::")
     push_data_to_elastic(
         data=df.toPandas().to_dict(orient="records"),
